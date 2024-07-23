@@ -1,6 +1,6 @@
 package Game;
 
-import WordList.Loader;
+import main.WordList.Loader;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -118,6 +118,10 @@ public class Wordle {
         System.out.println("Word to guess is: " + solution);
     }
 
+    public void setSolution(String solution){
+        this.solution = solution;
+    }
+
     public void initialiseGame(){
         //Starting User Prompt for Word Length
         System.out.println("Welcome to Wordle. Please input the desired word length:");
@@ -131,7 +135,7 @@ public class Wordle {
             }
         }
 
-        //Starting User Prompt for Game Setting
+        //Starting User Prompt for main.Game Setting
         System.out.println("Now please input the gamemode: (Normal | Info | Solver | Experiment)");
         while(true){
             String input = readLine();
@@ -271,7 +275,7 @@ public class Wordle {
 
             //Checking that the input is valid
             if(input.length() != wordLength){
-                System.out.println("Game.Guess must be " + wordLength + " letters");
+                System.out.println("Guess must be " + wordLength + " letters");
                 continue;
             }
             else if (!loader.getWordList().contains(input)){
