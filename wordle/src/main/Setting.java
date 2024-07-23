@@ -1,5 +1,3 @@
-package Game;
-
 public enum Setting {
     NORMAL,
     INFO,

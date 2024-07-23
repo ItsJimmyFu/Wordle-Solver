@@ -1,5 +1,3 @@
-package main.WordList;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,16 +14,16 @@ public class Loader {
         //Check the desired word length is within word range and load the words from the corresponding file path
         switch (this.wordLength) {
             case 2:
-                filePath = "src/main/WordList/2-letter-words.txt";
+                filePath = "src/resources/WordList/2-letter-words.txt";
                 break;
             case 3:
-                filePath = "src/main/WordList/3-letter-words.txt";
+                filePath = "src/resources/WordList/3-letter-words.txt";
                 break;
             case 4:
-                filePath = "src/main/WordList/4-letter-words.txt";
+                filePath = "src/resources/WordList/4-letter-words.txt";
                 break;
             case 5:
-                filePath = "src/main/WordList/5-letter-words.txt";
+                filePath = "src/resources/WordList/5-letter-words.txt";
                 break;
             default:
                 throw new Exception("Not Valid Word Length");
