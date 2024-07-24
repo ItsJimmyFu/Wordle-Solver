@@ -20,6 +20,13 @@ public class Wordle {
         }
     }
 
+    //Reset the wordle game
+    public void reset(){
+        gameOver = false;
+        win = false;
+        guesses = new ArrayList<>();
+    }
+
     //Add a guess to the wordle game
     public void addGuess(String word) throws Exception{
         //Ensure that the word is valid
