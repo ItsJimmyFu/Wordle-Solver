@@ -41,11 +41,6 @@ public class Wordle {
         }
     }
 
-    //Set the solution of the wordle game
-    public void setSolution(String solution){
-        this.solution = solution;
-    }
-
     //Generate a random solution from the list of words
     public void generateSolution(){
         //Choose a random index in wordList
