@@ -3,7 +3,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Wordle {
-    private Loader loader;
+    public Loader loader;
+    public Solver solver;
     private int wordLength;
     public String solution;
     public ArrayList<Guess> guesses;
@@ -18,6 +19,7 @@ public class Wordle {
         } catch (Exception e) {
             throw e;
         }
+        solver = new Solver(loader);
     }
 
     //Reset the wordle game

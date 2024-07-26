@@ -13,14 +13,22 @@ public class Game {
 
     //Start the game in terminal
     public static void main(String[] args) {
+        Setting setting = Setting.INFO;
+
         Game game = new Game();
         game.initialise();
         while(game.playAgain) {
-            game.play();
+            if(setting == Setting.NORMAL) {
+                game.play();
+            }
+            else if (setting == Setting.INFO){
+                game.playInfo();
+            }
             game.end();
         }
     }
 
+    //Initialise the game
     public void initialise(){
         try {
             wordle = new Wordle(5);
@@ -30,13 +38,15 @@ public class Game {
         }
     }
 
+    //Start the game
     public void play(){
         wordle.generateSolution();
         System.out.println("Please input a guess");
         while(!wordle.gameOver){
-            String input = readLine();
+            String userGuess = readLine();
+            //Check if the user guess is valid
             try {
-                wordle.addGuess(input);
+                wordle.addGuess(userGuess);
             } catch (Exception e){
                 System.out.println(e.getMessage());
                 continue;
@@ -45,6 +55,26 @@ public class Game {
         }
     }
 
+    public void playInfo(){
+        Solver solver = new Solver(wordle.loader);
+
+        wordle.generateSolution();
+        while(!wordle.gameOver){
+            String userGuess = readLine();
+            //Check if the user guess is valid
+            try {
+                wordle.addGuess(userGuess);
+                solver.filterSolutions(wordle.guesses.get(wordle.guesses.size()-1));
+                System.out.println(solver.filteredSolutions);
+            } catch (Exception e){
+                System.out.println(e.getMessage());
+                continue;
+            }
+            wordle.printOutput();
+        }
+    }
+
+    //End the game and allow the user to reset
     public void end(){
         if(wordle.win){
             System.out.println("Correct, You got the answer in " + wordle.guesses.size() + ((wordle.guesses.size()==1) ? " try" : " tries"));
@@ -53,7 +83,6 @@ public class Game {
             System.out.println("You are out of guesses. The correct answer is: " + wordle.solution);
         }
 
-        wordle.win = false;
         wordle.reset();
         System.out.println("Play Again? YES (Y) : NO (N)");
         while(true) {

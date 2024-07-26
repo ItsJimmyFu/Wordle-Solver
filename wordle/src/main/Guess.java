@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Guess {
-    private int wordLength;
+    public int wordLength;
     private int guessNumber;
     private String guess;
     private String solution;
@@ -32,7 +32,7 @@ public class Guess {
     public void createOutcomes(){
         outcomes = new ArrayList<>();
 
-        //Keep track of the remaining possible characters to account for duplicates
+        //Keep track of the remaining possible characters in the solution to account for duplicates
         ArrayList<Character> remainingChars = new ArrayList<>();
 
         //Add the Green matching characters
@@ -40,7 +40,9 @@ public class Guess {
             if (Character.toLowerCase(guess.charAt(charIndex)) == Character.toLowerCase(solution.charAt(charIndex))) {
                 outcomes.add(Outcome.GREEN);
             } else {
+                //Add GRAY as a tempoary placeholder in outcomes for potential YELLOW outcomes
                 outcomes.add(Outcome.GRAY);
+                //Add the character as green characters are now accounted for
                 remainingChars.add(solution.charAt(charIndex));
             }
         }
