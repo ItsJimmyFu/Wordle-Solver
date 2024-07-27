@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.Locale;
 
 public class Game {
     private BufferedWriter writer;
@@ -66,8 +65,8 @@ public class Game {
             try {
                 wordle.addGuess(userGuess);
                 //Filter out the possible solutions based on the guess
-                solver.filterSolutions(wordle.guesses.get(wordle.guesses.size()-1));
-                System.out.println(solver.filteredSolutions);
+                solver.filterPossibleSolutions(wordle.guesses.get(wordle.guesses.size()-1));
+                System.out.println(solver.possibleSolutions);
             } catch (Exception e){
                 System.out.println(e.getMessage());
                 continue;

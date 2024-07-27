@@ -3,8 +3,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.MissingResourceException;
 
 public class SolverTest {
 
@@ -15,9 +13,9 @@ public class SolverTest {
     void testFilterCorrectGuess() {
         for (String guess: wordPoolA){
             Solver solver = new Solver(wordPoolA);
-            solver.filterSolutions(new Guess(guess,guess,0));
-            Assertions.assertEquals(1,solver.filteredSolutions.size());
-            Assertions.assertEquals(guess, solver.filteredSolutions.get(0));
+            solver.filterPossibleSolutions(new Guess(guess,guess,0));
+            Assertions.assertEquals(1,solver.possibleSolutions.size());
+            Assertions.assertEquals(guess, solver.possibleSolutions.get(0));
         }
     }
 
@@ -31,14 +29,13 @@ public class SolverTest {
         Solver solver = new Solver(wordPoolB);
 
         //Testing filter for words with unlimited letter occurences
-        solver.filterSolutions(new Guess("eexxx", "zezez",0));
+        solver.filterPossibleSolutions(new Guess("eexxx", "zezez",0));
         ArrayList<String> expected = new ArrayList<>(Arrays.asList("fever","sever","lever","selee","seeee"));
-        Assertions.assertEquals(expected,solver.filteredSolutions);
+        Assertions.assertEquals(expected,solver.possibleSolutions);
 
         //Testing filter for words with max 2 letter occurences
-        solver.filterSolutions(new Guess("eexex", "zezez",0));
+        solver.filterPossibleSolutions(new Guess("eexex", "zezez",0));
         expected = new ArrayList<>(Arrays.asList("fever","sever","lever"));
-        Assertions.assertEquals(expected,solver.filteredSolutions);
+        Assertions.assertEquals(expected,solver.possibleSolutions);
     }
-
 }

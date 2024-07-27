@@ -1,5 +1,9 @@
-public enum Outcome {
-    GRAY,
+public enum Outcome implements Comparable<Outcome> {
+    GREEN,
     YELLOW,
-    GREEN
+    GRAY
 }
+
+
+
+
