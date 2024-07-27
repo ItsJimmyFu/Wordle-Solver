@@ -40,7 +40,7 @@ public class Guess {
             if (Character.toLowerCase(guess.charAt(charIndex)) == Character.toLowerCase(solution.charAt(charIndex))) {
                 outcomes.add(Outcome.GREEN);
             } else {
-                //Add GRAY as a tempoary placeholder in outcomes for potential YELLOW outcomes
+                //Add GRAY as a temporary placeholder in outcomes for potential YELLOW outcomes
                 outcomes.add(Outcome.GRAY);
                 //Add the character as green characters are now accounted for
                 remainingChars.add(solution.charAt(charIndex));

@@ -56,7 +56,7 @@ public class Game {
     }
 
     public void playInfo(){
-        Solver solver = new Solver(wordle.loader);
+        Solver solver = new Solver(wordle.loader.getWordList());
 
         wordle.generateSolution();
         while(!wordle.gameOver){

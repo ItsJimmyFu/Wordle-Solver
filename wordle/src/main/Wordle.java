@@ -19,7 +19,7 @@ public class Wordle {
         } catch (Exception e) {
             throw e;
         }
-        solver = new Solver(loader);
+        solver = new Solver(loader.getWordList());
     }
 
     //Reset the wordle game

@@ -2,14 +2,12 @@ import java.sql.Array;
 import java.util.*;
 
 public class Solver {
-    private Loader loader;
     private ArrayList<String> solutions;
     public ArrayList<String> filteredSolutions;
 
-    public Solver(Loader loader){
-        this.loader = loader;
-        this.filteredSolutions =this.loader.getWordList();
-        this.solutions = this.loader.getWordList();
+    public Solver(ArrayList<String> wordList){
+        this.filteredSolutions = wordList;
+        this.solutions = wordList;
     }
 
     public void filterSolutions(Guess guess){
@@ -40,10 +38,15 @@ public class Solver {
     }
 
     public boolean filterWord(String word, Collection<Constraint> constraints){
-        ArrayList<Integer> searchedCharIndex = new ArrayList<>();
 
         for (Constraint constraint : constraints){
             Character letter = constraint.getLetter();
+
+            //Keep track of the characters in the word that have not been mapped to by constraints
+            HashSet<Integer> remainingCharIndex = new HashSet<>();
+            for (int charIdx = 0; charIdx < word.length(); charIdx++){
+                remainingCharIndex.add(charIdx);
+            }
 
             for (int idx = 0; idx < constraint.size(); idx++){
                 Outcome outcome = constraint.getOutcomeAtIndex(idx);
@@ -51,8 +54,8 @@ public class Solver {
 
                 switch(outcome){
                     case GREEN:
-                        if((word.charAt(position) == letter) && !searchedCharIndex.contains(position)){
-                            searchedCharIndex.add(position);
+                        if((word.charAt(position) == letter) && (remainingCharIndex.contains(position))){
+                            remainingCharIndex.remove(position);
                         }
                         else{
                             return false;
@@ -62,24 +65,25 @@ public class Solver {
                         if(word.charAt(position) == letter){
                             return false;
                         }
-                        boolean containsLetter = false;
-                        for (int charIdx = 0; charIdx < word.length(); charIdx++){
-                            if(searchedCharIndex.contains(charIdx)){
-                                continue;
-                            }
-                            if(word.charAt(charIdx)==letter){
-                                searchedCharIndex.add(charIdx);
-                                containsLetter = true;
+                        int indexOfLetter = -1;
+                        for (int charIdx : remainingCharIndex){
+                            if(word.charAt(charIdx) == letter){
+                                indexOfLetter = charIdx;
                                 break;
                             }
                         }
-                        if(!containsLetter){
+                        if(indexOfLetter == -1){
                             return false;
+                        }
+                        else{
+                            remainingCharIndex.remove(indexOfLetter);
                         }
                         break;
                     case GRAY:
-                        if(word.indexOf(letter) != -1){
-                            return false;
+                        for (int charIdx : remainingCharIndex){
+                            if(word.charAt(charIdx) == letter){
+                                return false;
+                            }
                         }
                         break;
                 }

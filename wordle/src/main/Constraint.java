@@ -4,7 +4,7 @@ import java.util.Arrays;
 public class Constraint {
     private char letter;
     private ArrayList<Integer> positions;
-    private ArrayList<Outcome> outcomes;
+    public ArrayList<Outcome> outcomes;
     //private int minOccurrences;
     //private int maxOccurrences;
     //private int grayCount;
@@ -13,23 +13,7 @@ public class Constraint {
         this.letter = letter;
         positions = new ArrayList<>(Arrays.asList(position));
         outcomes = new ArrayList<>(Arrays.asList(outcome));
-        //minOccurrences = 1;
-        //Update this to the word length
-        //maxOccurrences = 5;
-
-        //grayCount = 0;
     }
-
-    /*
-    public boolean withinOccurrenceRange(int occurrences){
-        if(occurrences < minOccurrences || occurrences > maxOccurrences){
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
-     */
 
     public char getLetter() {
         return letter;
@@ -49,15 +33,16 @@ public class Constraint {
 
     public void addConstraint(int position, Outcome outcome){
         //Add the constraint to constraints ArrayList so that it is sorted
-        // in order of Green -> Yellow -> Gray
+        // in order of Green, Yellow and then Gray Outcomes
 
-        //Default is 0 for Green or empty lists
+        //Default index to insert is 0 for a Green Outcome or empty lists
         int insertIndex = 0;
 
+        //If Outcome is Gray insert at the end of the list
         if(outcome == Outcome.GRAY){
             insertIndex = outcomes.size();
-            //grayCount++;
         }
+        //If outcome is yellow, find the last green outcome and insert after that
         else if (outcome == Outcome.YELLOW){
             for(int idx = 0; idx < outcomes.size(); idx++){
                 insertIndex = idx;
@@ -66,20 +51,6 @@ public class Constraint {
                 }
             }
         }
-
-        /*
-        //Update the minOccurences and maxOccurences based on the number of gray outcomes for the letter in the guess
-        this.minOccurrences = outcomes.size()-grayCount;
-
-        if(grayCount == 0){
-            //Change to word length
-            this.maxOccurrences = 5;
-        }
-        else{
-            this.maxOccurrences = minOccurrences;
-        }
-        */
-
 
         //By default Green will insert at the head of the list
         positions.add(insertIndex,position);
