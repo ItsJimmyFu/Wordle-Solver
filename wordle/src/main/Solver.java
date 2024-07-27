@@ -42,7 +42,7 @@ public class Solver {
         for (Constraint constraint : constraints){
             Character letter = constraint.getLetter();
 
-            //Keep track of the characters in the word that have not been mapped to by constraints
+            //Keep track of the index of characters in the word that have not been mapped to by constraints
             HashSet<Integer> remainingCharIndex = new HashSet<>();
             for (int charIdx = 0; charIdx < word.length(); charIdx++){
                 remainingCharIndex.add(charIdx);

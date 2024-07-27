@@ -1,4 +1,7 @@
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 
 public class Guess {
     public int wordLength;
@@ -30,31 +33,40 @@ public class Guess {
 
     //Get the outcomes of the word compared to the solution of the game
     public void createOutcomes(){
-        outcomes = new ArrayList<>();
+        Outcome[] outcomes = new Outcome[wordLength];
 
-        //Keep track of the remaining possible characters in the solution to account for duplicates
+        //Keep track of the remaining characters in the solution
         ArrayList<Character> remainingChars = new ArrayList<>();
 
-        //Add the Green matching characters
+        //Add the outcomes for all Green matching characters
         for (int charIndex = 0; charIndex < wordLength; charIndex++) {
+            //Check if the character at charIndex of guess is equal to the character at charIndex of the solution
             if (Character.toLowerCase(guess.charAt(charIndex)) == Character.toLowerCase(solution.charAt(charIndex))) {
-                outcomes.add(Outcome.GREEN);
+                outcomes[charIndex] = Outcome.GREEN;
             } else {
-                //Add GRAY as a temporary placeholder in outcomes for potential YELLOW outcomes
-                outcomes.add(Outcome.GRAY);
-                //Add the character as green characters are now accounted for
+                //Add the remaining characters in the solution that are not Green outcomes
                 remainingChars.add(solution.charAt(charIndex));
             }
         }
-        //Add the yellow matching characters
-        for (int charIndex = 0; charIndex < wordLength; charIndex++){
-            if(outcomes.get(charIndex) == Outcome.GRAY){
+
+        // Add the Yellow and Gray Matches
+        for(int charIndex = 0; charIndex < wordLength; charIndex++) {
+            //Skip if the guess at charIndex is already matched to a solution char
+            if(outcomes[charIndex] == Outcome.GREEN){
+                continue;
+            }
+            else{
+                //Check if guess at charIndex can be mapped to the remaining solution characters
                 if(remainingChars.contains(guess.charAt(charIndex))){
-                    outcomes.set(charIndex,Outcome.YELLOW);
+                    outcomes[charIndex] = Outcome.YELLOW;
+                    remainingChars.remove((Object) guess.charAt(charIndex));
                 }
-                remainingChars.remove((Object) guess.charAt(charIndex));
+                else{
+                    outcomes[charIndex] = Outcome.GRAY;
+                }
             }
         }
+        this.outcomes = new ArrayList<>(Arrays.asList(outcomes));
     }
 
     //Display the guess into terminal in the specific color coding based on outcomes

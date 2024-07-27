@@ -5,9 +5,6 @@ public class Constraint {
     private char letter;
     private ArrayList<Integer> positions;
     public ArrayList<Outcome> outcomes;
-    //private int minOccurrences;
-    //private int maxOccurrences;
-    //private int grayCount;
 
     public Constraint(char letter, int position, Outcome outcome){
         this.letter = letter;
@@ -31,6 +28,7 @@ public class Constraint {
         return outcomes.size();
     }
 
+    // Add the new constraint to positions and outcomes
     public void addConstraint(int position, Outcome outcome){
         //Add the constraint to constraints ArrayList so that it is sorted
         // in order of Green, Yellow and then Gray Outcomes

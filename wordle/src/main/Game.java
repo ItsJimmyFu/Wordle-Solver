@@ -55,6 +55,7 @@ public class Game {
         }
     }
 
+    //Start the game but with info about next possible move
     public void playInfo(){
         Solver solver = new Solver(wordle.loader.getWordList());
 
@@ -64,6 +65,7 @@ public class Game {
             //Check if the user guess is valid
             try {
                 wordle.addGuess(userGuess);
+                //Filter out the possible solutions based on the guess
                 solver.filterSolutions(wordle.guesses.get(wordle.guesses.size()-1));
                 System.out.println(solver.filteredSolutions);
             } catch (Exception e){
