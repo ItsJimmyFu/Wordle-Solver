@@ -37,7 +37,7 @@ public class Wordle {
         }
 
         //Create the guess
-        Guess guess = new Guess(word,this.solution,guesses.size()+1);
+        Guess guess = new Guess(word,this.solution);
         guesses.add(guess);
 
         //Check if the guess is correct
@@ -54,7 +54,15 @@ public class Wordle {
     public void generateSolution(){
         //Choose a random index in wordList
         Random random = new Random();
-        this.solution = loader.getWordList().get(random.nextInt(loader.getWordList().size()));
+        //Get a random value from the set
+        int randomNum = random.nextInt(loader.getWordList().size());
+        int curIdx = 0;
+        for (String word: loader.getWordList()){
+            if(curIdx == randomNum){
+                solution = word;
+            }
+            curIdx++;
+        }
 
         //Display the solution - delete this later
         System.out.println("Word to guess is: " + solution);
@@ -67,8 +75,9 @@ public class Wordle {
         System.out.flush();
 
         //Printing each guess and its result
-        for(Guess guess: guesses){
-            guess.displayGuess();
+        for(int idx = 0; idx < guesses.size(); idx++){
+            System.out.println(idx + ": " + guesses.get(idx));
+
         }
     }
 }

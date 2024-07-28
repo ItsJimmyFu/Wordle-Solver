@@ -1,10 +1,10 @@
 import java.util.*;
 
 public class Solver {
-    private ArrayList<String> wordList;
-    public ArrayList<String> possibleSolutions;
+    private HashSet<String> wordList;
+    public HashSet<String> possibleSolutions;
 
-    public Solver(ArrayList<String> wordList){
+    public Solver(HashSet<String> wordList){
         this.possibleSolutions = wordList;
         this.wordList = wordList;
     }
@@ -22,7 +22,7 @@ public class Solver {
         }
 
         //Creates the new filtered list of solutions and adds each word in the word list that satisfies the constraints
-        ArrayList<String> newFilteredSolutions = new ArrayList<>();
+        HashSet<String> newFilteredSolutions = new HashSet<>();
         for (String solution : possibleSolutions){
             if(filterWord(solution,constraints)){
                 newFilteredSolutions.add(solution);

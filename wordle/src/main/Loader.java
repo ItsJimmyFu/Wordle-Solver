@@ -2,10 +2,11 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Loader {
     private int wordLength;
-    private ArrayList<String> wordList;
+    public HashSet<String> wordList;
 
     public Loader(int wordLength) throws Exception{
         this.wordLength = wordLength;
@@ -34,7 +35,7 @@ public class Loader {
 
     // Read the text file and load the words into wordList
     private void generateWords(String filePath){
-        wordList = new ArrayList();
+        wordList = new HashSet<>();
 
         BufferedReader reader;
         try {
@@ -53,7 +54,7 @@ public class Loader {
     }
 
     //Get the list of words
-    public ArrayList<String> getWordList() {
+    public HashSet<String> getWordList() {
         return wordList;
     }
 }

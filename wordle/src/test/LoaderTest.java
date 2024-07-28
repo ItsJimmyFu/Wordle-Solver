@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
+
 public class LoaderTest {
     @Test
     void testWordListSize() throws Exception {
@@ -11,13 +13,13 @@ public class LoaderTest {
     @Test
     void testFirstWordLoaded() throws Exception {
         Loader loader = new Loader(5);
-        Assertions.assertEquals("aahed",loader.getWordList().get(0));
+        Assertions.assertTrue(loader.getWordList().contains("aahed"));
     }
 
     @Test
     void testLastWordLoaded() throws Exception {
         Loader loader = new Loader(5);
-        Assertions.assertEquals("zymic",loader.getWordList().get(loader.getWordList().size()-1));
+        Assertions.assertTrue(loader.getWordList().contains("zymic"));
     }
 
     @Test

@@ -5,7 +5,6 @@ import java.util.HashSet;
 
 public class Guess {
     public int wordLength;
-    private int guessNumber;
     private String guess;
     private String solution;
     private ArrayList<Outcome> outcomes;
@@ -15,11 +14,10 @@ public class Guess {
     private static final String YELLOW_BACKGROUND = "\u001B[43m";
     private static final String RESET = "\u001B[0m";
 
-    public Guess(String guess, String solution, int guessNumber){
+    public Guess(String guess, String solution){
         this.guess = guess;
         this.wordLength = guess.length();
         this.solution = solution;
-        this.guessNumber = guessNumber;
         createOutcomes();
     }
 
@@ -69,22 +67,23 @@ public class Guess {
         this.outcomes = new ArrayList<>(Arrays.asList(outcomes));
     }
 
-    //Display the guess into terminal in the specific color coding based on outcomes
-    public void displayGuess(){
-        String output = this.guessNumber + ": ";
+    //Get the string encoding of the guess
+    @Override
+    public String toString(){
+        String string = " ";
         for (int charIndex = 0; charIndex < wordLength; charIndex++){
             switch (outcomes.get(charIndex)){
                 case GREEN:
-                    output += GREEN_BACKGROUND + " " + Character.toUpperCase(guess.charAt(charIndex)) + " " + RESET;
+                    string += GREEN_BACKGROUND + " " + Character.toUpperCase(guess.charAt(charIndex)) + " " + RESET;
                     break;
                 case YELLOW:
-                    output += YELLOW_BACKGROUND + " " + Character.toUpperCase(guess.charAt(charIndex)) + " " + RESET;
+                    string += YELLOW_BACKGROUND + " " + Character.toUpperCase(guess.charAt(charIndex)) + " " + RESET;
                     break;
                 case GRAY:
-                    output += " " + Character.toUpperCase(guess.charAt(charIndex)) + " ";
+                    string += " " + Character.toUpperCase(guess.charAt(charIndex)) + " ";
                     break;
             }
         }
-        System.out.println(output);
+        return string;
     }
 }

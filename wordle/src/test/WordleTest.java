@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
+
 public class WordleTest {
 
     @Test
@@ -99,6 +101,19 @@ public class WordleTest {
         wordle.addGuess("liver");
         Assertions.assertTrue(wordle.gameOver);
         Assertions.assertFalse(wordle.win);
+
+    }
+
+    @Test
+    void testSolutionGenerate() throws Exception{
+        Loader loader = new Loader(5);
+        loader.wordList = new HashSet<>();
+        loader.wordList.add("SOL.1");
+
+        Wordle wordle = new Wordle(5);
+        wordle.loader = loader;
+        wordle.generateSolution();
+        Assertions.assertEquals("SOL.1",wordle.solution);
 
     }
 }
