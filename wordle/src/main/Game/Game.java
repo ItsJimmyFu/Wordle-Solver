@@ -144,9 +144,9 @@ public class Game {
     }
 
     public void startExperiment(){
-        float totalGuesses = 0;
+        int totalGuesses = 0;
         int wins = 0;
-        int totalWords = wordle.loader.wordList.size();
+        float totalWords = wordle.loader.wordList.size();
 
         int curIdx = 0;
         for (String solution : wordle.loader.getWordList()){
@@ -168,7 +168,7 @@ public class Game {
             curIdx++;
 
             //Display a progress bar for the experiment
-            int increment = totalWords/10;
+            int increment = (int) totalWords/10;
             if(curIdx%increment==0){
                 int percent = curIdx/increment;
                 System.out.println("[" +"*".repeat(percent) +"-".repeat(10-percent)+"] " + (percent*10) +"%");
