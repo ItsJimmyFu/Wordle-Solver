@@ -27,6 +27,9 @@ public class Solver {
         return heuristic.getSolution(this.wordList,this.possibleSolutions,this.constraints);
     }
 
+    public void reset(){
+        this.possibleSolutions = this.wordList;
+    }
 
     //Filter the list of solutions into possibleSolutions based on the constraints of the guess
     public void filterPossibleSolutions(Guess guess){

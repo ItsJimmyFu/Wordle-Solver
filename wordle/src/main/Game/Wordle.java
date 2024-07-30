@@ -6,7 +6,7 @@ import java.util.Random;
 public class Wordle {
     public Loader loader;
     public Solver solver;
-    private int wordLength;
+    public int wordLength;
     public String solution;
     public ArrayList<Guess> guesses;
     public boolean gameOver = false;
@@ -77,7 +77,7 @@ public class Wordle {
 
         //Printing each guess and its result
         for(int idx = 0; idx < guesses.size(); idx++){
-            System.out.println(idx + ": " + guesses.get(idx));
+            System.out.println((idx+1) + ": " + guesses.get(idx));
 
         }
     }

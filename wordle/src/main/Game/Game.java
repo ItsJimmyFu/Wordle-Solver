@@ -3,12 +3,14 @@ package Game;
 import Heuristics.FirstFilteredGuess;
 import Heuristics.Heuristic;
 
+import javax.imageio.plugins.tiff.ExifParentTIFFTagSet;
 import java.io.*;
 
 public class Game {
     private BufferedWriter writer;
     public BufferedReader reader;
     public Wordle wordle;
+    public Solver solver;
     private boolean playAgain=true;
     public Setting setting;
     public Heuristic heuristic;
@@ -22,25 +24,32 @@ public class Game {
 
         Game game = new Game();
         game.initialise();
-        while(game.playAgain) {
-            if(game.setting == Setting.NORMAL) {
-                game.play();
+        if(game.setting == Setting.EXPERIMENT) {
+            game.startExperiment();
+        }
+        else {
+            while (game.playAgain) {
+                //Generate the solution for the game
+                game.wordle.generateSolution();
+
+                if (game.setting == Setting.NORMAL) {
+                    game.play();
+                } else if (game.setting == Setting.INFO) {
+                    game.playWithInfo();
+                } else if (game.setting == Setting.SOLVER) {
+                    game.playWithSolver();
+                    game.wordle.printOutput();
+                }
+                game.end();
             }
-            else if (game.setting == Setting.INFO){
-                game.playWithInfo();
-            }
-            else if(game.setting == Setting.SOLVER){
-                game.playWithSolver();
-            }
-            game.end();
         }
     }
 
     //Initialise the game
-    public void initialise(){
+    public void initialise() {
         //Starting User Prompt for Word Length
         System.out.println("Welcome to Wordle. Please input the desired word length:");
-        while(true){
+        while (true) {
             String input = readLine();
             int wordLength;
 
@@ -55,34 +64,52 @@ public class Game {
         }
 
         //Starting User Prompt for Game Setting
-        System.out.println("Please input Game Mode: (Normal | Info | Solver)");
-        while(true){
+        System.out.println("Please input Game Mode: (Normal | Info | Solver | Experiment)");
+        while (true) {
             String input = readLine();
-            if(input.equalsIgnoreCase("Normal")){
+            if (input.equalsIgnoreCase("Normal")) {
                 this.setting = Setting.NORMAL;
                 System.out.println("Normal Mode");
                 break;
-            }
-            else if(input.equalsIgnoreCase("Info")){
+            } else if (input.equalsIgnoreCase("Info")) {
                 this.setting = Setting.INFO;
                 System.out.println("Info Mode");
                 break;
-            }
-            else if(input.equalsIgnoreCase("Solver")){
+            } else if (input.equalsIgnoreCase("Solver")) {
                 this.setting = Setting.SOLVER;
                 this.heuristic = new FirstFilteredGuess();
                 System.out.println("Solver Mode");
                 break;
+            } else if (input.equalsIgnoreCase("Experiment")) {
+                this.setting = Setting.EXPERIMENT;
+                this.heuristic = new FirstFilteredGuess();
+
+                String filePath = "src/resources/Results/" + heuristic.getName() + wordle.wordLength + ".txt";
+
+                FileWriter file;
+                try {
+                    file = new FileWriter(filePath);
+                } catch (IOException exception) {
+                    System.out.println(exception.getMessage());
+                    return;
+                }
+                writer = new BufferedWriter(file);
+                System.out.println("Experiment Mode");
+                break;
+            } else {
+                System.out.println("Not valid setting, must be (Normal | Info | Solver | Experiment)");
             }
-            else {
-                System.out.println("Not valid setting, must be (Normal | Info | Solver)");
-            }
+        }
+        if (setting == Setting.SOLVER || setting == Setting.EXPERIMENT) {
+            solver = new Solver(wordle.loader.getWordList(), heuristic);
+        }
+        else {
+            solver = new Solver(wordle.loader.getWordList());
         }
     }
 
     //Start the game
     public void play(){
-        wordle.generateSolution();
         System.out.println("Please input a guess");
         while(!wordle.gameOver){
             String userGuess = readLine();
@@ -99,9 +126,7 @@ public class Game {
 
     //Start the game but with info about next possible move
     public void playWithInfo(){
-        Solver solver = new Solver(wordle.loader.getWordList());
 
-        wordle.generateSolution();
         while(!wordle.gameOver){
             String userGuess = readLine();
             //Check if the user guess is valid
@@ -118,23 +143,61 @@ public class Game {
         }
     }
 
+    public void startExperiment(){
+        float totalGuesses = 0;
+        int wins = 0;
+        int totalWords = wordle.loader.wordList.size();
+
+        int curIdx = 0;
+        for (String solution : wordle.loader.getWordList()){
+            wordle.solution = solution;
+            playWithSolver();
+
+            try {
+                writer.write(solution + " " + wordle.guesses.size() +"\n");
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+
+            totalGuesses+= wordle.guesses.size();
+            if(wordle.win){
+                wins++;
+            }
+            wordle.reset();
+            solver.reset();
+            curIdx++;
+
+            //Display a progress bar for the experiment
+            int increment = totalWords/10;
+            if(curIdx%increment==0){
+                int percent = curIdx/increment;
+                System.out.println("[" +"*".repeat(percent) +"-".repeat(10-percent)+"] " + (percent*10) +"%");
+            }
+        }
+
+        try {
+            writer.newLine();
+            writer.write("Win Percentage is: " + (wins/totalWords*100) + "%. Wins: " + wins + " Losses: " + (int)(totalWords-wins) + "\n");
+            writer.write("Average number of guesses is: " + totalGuesses/totalWords + "\n");
+            writer.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     //Start the game but with info about next possible move
     public void playWithSolver(){
-        Solver solver = new Solver(wordle.loader.getWordList(), heuristic);
 
-        wordle.generateSolution();
         while(!wordle.gameOver){
             try {
                 //Add the solvers guess to the game
                 wordle.addGuess(solver.makeGuess());
                 //Filter out the possible solutions based on the guess
                 solver.filterPossibleSolutions(wordle.guesses.get(wordle.guesses.size()-1));
-                System.out.println(solver.possibleSolutions);
             } catch (Exception e){
                 System.out.println(e.getMessage());
                 continue;
             }
-            wordle.printOutput();
         }
     }
 
@@ -148,6 +211,8 @@ public class Game {
         }
 
         wordle.reset();
+        solver.reset();
+
         System.out.println("Play Again? YES (Y) : NO (N)");
         while(true) {
             String input = readLine();
