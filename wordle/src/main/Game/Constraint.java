@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
+package Game;
 
 public class Constraint implements Comparable<Constraint> {
     private char letter;

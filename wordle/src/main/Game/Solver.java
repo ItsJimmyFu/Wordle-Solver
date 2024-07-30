@@ -1,13 +1,32 @@
+package Game;
+
+import Heuristics.Heuristic;
+
 import java.util.*;
 
 public class Solver {
     private HashSet<String> wordList;
     public HashSet<String> possibleSolutions;
+    public Heuristic heuristic;
+    public ArrayList<Constraint> constraints;
 
     public Solver(HashSet<String> wordList){
         this.possibleSolutions = wordList;
         this.wordList = wordList;
+        this.constraints = new ArrayList<>();
     }
+
+    public Solver(HashSet<String> wordList, Heuristic heuristic){
+        this.possibleSolutions = wordList;
+        this.wordList = wordList;
+        this.constraints = new ArrayList<>();
+        this.heuristic = heuristic;
+    }
+
+    public String makeGuess(){
+        return heuristic.getSolution(this.wordList,this.possibleSolutions,this.constraints);
+    }
+
 
     //Filter the list of solutions into possibleSolutions based on the constraints of the guess
     public void filterPossibleSolutions(Guess guess){
@@ -28,6 +47,8 @@ public class Solver {
                 newFilteredSolutions.add(solution);
             }
         }
+
+        this.constraints.addAll(constraints);
         this.possibleSolutions = newFilteredSolutions;
     }
 

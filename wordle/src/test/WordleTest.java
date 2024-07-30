@@ -1,3 +1,5 @@
+import Game.Loader;
+import Game.Wordle;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

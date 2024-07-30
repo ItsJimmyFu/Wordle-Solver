@@ -1,3 +1,8 @@
+package Game;
+
+import Heuristics.FirstFilteredGuess;
+import Heuristics.Heuristic;
+
 import java.io.*;
 
 public class Game {
@@ -5,6 +10,8 @@ public class Game {
     public BufferedReader reader;
     public Wordle wordle;
     private boolean playAgain=true;
+    public Setting setting;
+    public Heuristic heuristic;
 
     public Game(){
         reader = new BufferedReader(new InputStreamReader(System.in));
@@ -12,16 +19,18 @@ public class Game {
 
     //Start the game in terminal
     public static void main(String[] args) {
-        Setting setting = Setting.INFO;
 
         Game game = new Game();
         game.initialise();
         while(game.playAgain) {
-            if(setting == Setting.NORMAL) {
+            if(game.setting == Setting.NORMAL) {
                 game.play();
             }
-            else if (setting == Setting.INFO){
-                game.playInfo();
+            else if (game.setting == Setting.INFO){
+                game.playWithInfo();
+            }
+            else if(game.setting == Setting.SOLVER){
+                game.playWithSolver();
             }
             game.end();
         }
@@ -29,11 +38,45 @@ public class Game {
 
     //Initialise the game
     public void initialise(){
-        try {
-            wordle = new Wordle(5);
+        //Starting User Prompt for Word Length
+        System.out.println("Welcome to Wordle. Please input the desired word length:");
+        while(true){
+            String input = readLine();
+            int wordLength;
+
+            try {
+                wordLength = Integer.parseInt(input);
+                wordle = new Wordle(wordLength);
+
+                break;
+            } catch (Exception e) {
+                System.out.println(input + " is not a valid word length");
+            }
         }
-        catch (Exception e) {
-            return;
+
+        //Starting User Prompt for Game Setting
+        System.out.println("Please input Game Mode: (Normal | Info | Solver)");
+        while(true){
+            String input = readLine();
+            if(input.equalsIgnoreCase("Normal")){
+                this.setting = Setting.NORMAL;
+                System.out.println("Normal Mode");
+                break;
+            }
+            else if(input.equalsIgnoreCase("Info")){
+                this.setting = Setting.INFO;
+                System.out.println("Info Mode");
+                break;
+            }
+            else if(input.equalsIgnoreCase("Solver")){
+                this.setting = Setting.SOLVER;
+                this.heuristic = new FirstFilteredGuess();
+                System.out.println("Solver Mode");
+                break;
+            }
+            else {
+                System.out.println("Not valid setting, must be (Normal | Info | Solver)");
+            }
         }
     }
 
@@ -55,7 +98,7 @@ public class Game {
     }
 
     //Start the game but with info about next possible move
-    public void playInfo(){
+    public void playWithInfo(){
         Solver solver = new Solver(wordle.loader.getWordList());
 
         wordle.generateSolution();
@@ -64,6 +107,26 @@ public class Game {
             //Check if the user guess is valid
             try {
                 wordle.addGuess(userGuess);
+                //Filter out the possible solutions based on the guess
+                solver.filterPossibleSolutions(wordle.guesses.get(wordle.guesses.size()-1));
+                System.out.println(solver.possibleSolutions);
+            } catch (Exception e){
+                System.out.println(e.getMessage());
+                continue;
+            }
+            wordle.printOutput();
+        }
+    }
+
+    //Start the game but with info about next possible move
+    public void playWithSolver(){
+        Solver solver = new Solver(wordle.loader.getWordList(), heuristic);
+
+        wordle.generateSolution();
+        while(!wordle.gameOver){
+            try {
+                //Add the solvers guess to the game
+                wordle.addGuess(solver.makeGuess());
                 //Filter out the possible solutions based on the guess
                 solver.filterPossibleSolutions(wordle.guesses.get(wordle.guesses.size()-1));
                 System.out.println(solver.possibleSolutions);

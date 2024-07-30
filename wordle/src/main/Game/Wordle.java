@@ -1,3 +1,4 @@
+package Game;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -33,7 +34,7 @@ public class Wordle {
     public void addGuess(String word) throws Exception{
         //Ensure that the word is valid
         if(word.length()!= wordLength || !loader.getWordList().contains(word.toLowerCase())){
-            throw new Exception("Invalid Guess");
+            throw new Exception("Invalid Game.Guess");
         }
 
         //Create the guess

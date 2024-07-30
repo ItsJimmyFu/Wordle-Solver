@@ -1,7 +1,8 @@
+import Game.Guess;
+import Game.Solver;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -114,6 +115,19 @@ public class SolverTest {
         ));
         Assertions.assertEquals(expected, solver.possibleSolutions);
 
+        //Solution = ratio
+        solver = new Solver(wordPoolC);
+        solver.filterPossibleSolutions(new Guess("horse", "ratio"));
+        expected = new HashSet<>(Arrays.asList("major", "ratio", "mayor"));
+        Assertions.assertEquals(expected, solver.possibleSolutions);
+
+        solver.filterPossibleSolutions(new Guess("arose", "ratio"));
+        expected = new HashSet<>(Arrays.asList("major","ratio", "mayor"));
+        Assertions.assertEquals(expected, solver.possibleSolutions);
+
+        solver.filterPossibleSolutions(new Guess("click", "ratio"));
+        expected = new HashSet<>(Arrays.asList("ratio"));
+        Assertions.assertEquals(expected, solver.possibleSolutions);
     }
 
     @Test

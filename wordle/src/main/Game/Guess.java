@@ -1,7 +1,7 @@
-import java.nio.file.Path;
+package Game;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 
 public class Guess {
     public int wordLength;

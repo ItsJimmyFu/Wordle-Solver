@@ -1,3 +1,5 @@
+import Game.Guess;
+import Game.Outcome;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -140,7 +142,7 @@ public class GuessTest {
         Assertions.assertEquals(expected,guess.getOutcomes());
 
         guess = new Guess("tacky","build");
-        expected = new ArrayList<>(Arrays.asList(Outcome.GRAY,Outcome.GRAY,Outcome.GRAY,Outcome.GRAY,Outcome.GRAY));
+        expected = new ArrayList<>(Arrays.asList(Outcome.GRAY,Outcome.GRAY,Outcome.GRAY,Outcome.GRAY, Outcome.GRAY));
         Assertions.assertEquals(expected,guess.getOutcomes());
 
         guess = new Guess("panic","study");
