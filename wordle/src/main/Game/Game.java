@@ -2,6 +2,8 @@ package Game;
 
 import Heuristics.FirstFilteredGuess;
 import Heuristics.Heuristic;
+import Heuristics.MostCommonLetters;
+import Heuristics.MostCommonPositionalLetters;
 
 import javax.imageio.plugins.tiff.ExifParentTIFFTagSet;
 import java.io.*;
@@ -77,23 +79,10 @@ public class Game {
                 break;
             } else if (input.equalsIgnoreCase("Solver")) {
                 this.setting = Setting.SOLVER;
-                this.heuristic = new FirstFilteredGuess();
                 System.out.println("Solver Mode");
                 break;
             } else if (input.equalsIgnoreCase("Experiment")) {
                 this.setting = Setting.EXPERIMENT;
-                this.heuristic = new FirstFilteredGuess();
-
-                String filePath = "src/resources/Results/" + heuristic.getName() + wordle.wordLength + ".txt";
-
-                FileWriter file;
-                try {
-                    file = new FileWriter(filePath);
-                } catch (IOException exception) {
-                    System.out.println(exception.getMessage());
-                    return;
-                }
-                writer = new BufferedWriter(file);
                 System.out.println("Experiment Mode");
                 break;
             } else {
@@ -101,6 +90,23 @@ public class Game {
             }
         }
         if (setting == Setting.SOLVER || setting == Setting.EXPERIMENT) {
+            System.out.println("Please Input Heuristic");
+            while(true) {
+                String input = readLine();
+                if (input.equalsIgnoreCase("FFG")) {
+                    this.heuristic = new FirstFilteredGuess();
+                    break;
+                }
+                else if (input.equalsIgnoreCase("MCL")) {
+                    this.heuristic = new MostCommonLetters();
+                    break;
+                }
+                else if (input.equalsIgnoreCase("MCPL")) {
+                    this.heuristic = new MostCommonPositionalLetters();
+                    break;
+                }
+                System.out.println("Not valid heuristic");
+            }
             solver = new Solver(wordle.loader.getWordList(), heuristic);
         }
         else {
@@ -144,6 +150,17 @@ public class Game {
     }
 
     public void startExperiment(){
+        String filePath = "src/resources/Results/" + heuristic.getName() + wordle.wordLength + ".txt";
+
+        FileWriter file;
+        try {
+            file = new FileWriter(filePath);
+        } catch (IOException exception) {
+            System.out.println(exception.getMessage());
+            return;
+        }
+        writer = new BufferedWriter(file);
+
         int totalGuesses = 0;
         int wins = 0;
         float totalWords = wordle.loader.wordList.size();

@@ -14854,5 +14854,5 @@ welks 6
 welkt 5
 rival 6
 
-Win Percentage is: 0%. Wins: 11927 Losses: 2928
+Win Percentage is: 80.28947%. Wins: 11927 Losses: 2928
 Average number of guesses is: 5.03689
