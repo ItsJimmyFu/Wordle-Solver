@@ -1,16 +1,17 @@
 package Heuristics;
 
 import Game.Constraint;
+import Game.Solver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
 public class MostCommonLetters extends Heuristic {
-    public String getSolution(HashSet<String> solutions, HashSet<String> filteredSolutions, ArrayList<Constraint> constraints) {
+    public String getSolution(Solver solver) {
         //Get the frequency count of all characters in wordList
         HashMap<Character,Double> frequencyCharList = new HashMap<>();
-        for (String solution : filteredSolutions){
+        for (String solution : solver.possibleSolutions){
             for (Character letter : solution.toCharArray()) {
                 if (frequencyCharList.containsKey(letter)){
                     frequencyCharList.put(letter,frequencyCharList.get(letter)+1);
@@ -22,12 +23,12 @@ public class MostCommonLetters extends Heuristic {
         }
         //Convert the count into a percentage
         for (Character letter : frequencyCharList.keySet()){
-            frequencyCharList.put(letter,frequencyCharList.get(letter)/filteredSolutions.size());
+            frequencyCharList.put(letter,frequencyCharList.get(letter)/solver.possibleSolutions.size());
         }
         String optimalSolution = null;
         double optimalScore = 0;
 
-        for (String solution : filteredSolutions){
+        for (String solution : solver.possibleSolutions){
             double score = frequencyLettersValue(solution,frequencyCharList);
             if(score > optimalScore){
                 optimalScore = score;
@@ -36,7 +37,7 @@ public class MostCommonLetters extends Heuristic {
         }
         if(optimalSolution == null){
             FirstFilteredGuess ffg = new FirstFilteredGuess();
-            return ffg.getSolution(solutions,filteredSolutions,constraints);
+            return ffg.getSolution(solver);
         }
         return optimalSolution;
     }

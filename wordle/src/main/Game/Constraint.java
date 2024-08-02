@@ -1,8 +1,8 @@
 package Game;
 
 public class Constraint implements Comparable<Constraint> {
-    private char letter;
-    private Integer position;
+    public char letter;
+    public Integer position;
     public Outcome outcome;
 
     public Constraint(char letter, int position, Outcome outcome){

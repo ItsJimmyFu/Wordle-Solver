@@ -1,15 +1,16 @@
 package Heuristics;
 
 import Game.Constraint;
+import Game.Solver;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class FirstFilteredGuess extends Heuristic {
 
-    public String getSolution(HashSet<String> solutions, HashSet<String> filteredSolutions, ArrayList<Constraint> constraints){
+    public String getSolution(Solver solver){
         //Get the first word from filteredSolutions
-        for (String word: filteredSolutions){
+        for (String word: solver.possibleSolutions){
             return word;
         }
         return "";

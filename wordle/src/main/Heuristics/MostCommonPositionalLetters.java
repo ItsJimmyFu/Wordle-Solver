@@ -1,6 +1,7 @@
 package Heuristics;
 
 import Game.Constraint;
+import Game.Solver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,10 +9,10 @@ import java.util.HashSet;
 
 public class MostCommonPositionalLetters extends Heuristic {
     @Override
-    public String getSolution(HashSet<String> solutions, HashSet<String> filteredSolutions, ArrayList<Constraint> constraints) {
+    public String getSolution(Solver solver) {
         //Making a hashmap of the character its index and its count
         HashMap<String,Double> frequencyCharList = new HashMap<>();
-        for (String solution : filteredSolutions){
+        for (String solution : solver.possibleSolutions){
             for (int charIdx = 0 ; charIdx < solution.length(); charIdx++){
                 char letter = solution.charAt(charIdx);
                 String key = letter + "" + charIdx;
@@ -27,7 +28,7 @@ public class MostCommonPositionalLetters extends Heuristic {
         String optimalSolution = null;
         double optimalScore = 0;
 
-        for (String solution : filteredSolutions){
+        for (String solution : solver.possibleSolutions){
             double score = frequencyLettersValue(solution,frequencyCharList);
             if(score > optimalScore){
                 optimalScore = score;
@@ -36,7 +37,7 @@ public class MostCommonPositionalLetters extends Heuristic {
         }
         if(optimalSolution == null){
             FirstFilteredGuess ffg = new FirstFilteredGuess();
-            return ffg.getSolution(solutions,filteredSolutions,constraints);
+            return ffg.getSolution(solver);
         }
         return optimalSolution;
     }

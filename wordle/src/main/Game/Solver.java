@@ -5,14 +5,16 @@ import Heuristics.Heuristic;
 import java.util.*;
 
 public class Solver {
-    private HashSet<String> wordList;
+    public HashSet<String> wordList;
     public HashSet<String> possibleSolutions;
+    public HashSet<String> possibleGuesses;
     public Heuristic heuristic;
     public ArrayList<Constraint> constraints;
 
     public Solver(HashSet<String> wordList){
         this.possibleSolutions = wordList;
         this.wordList = wordList;
+        this.possibleGuesses = wordList;
         this.constraints = new ArrayList<>();
     }
 
@@ -20,15 +22,18 @@ public class Solver {
         this.possibleSolutions = wordList;
         this.wordList = wordList;
         this.constraints = new ArrayList<>();
+        this.possibleGuesses = wordList;
         this.heuristic = heuristic;
     }
 
     public String makeGuess(){
-        return heuristic.getSolution(this.wordList,this.possibleSolutions,this.constraints);
+        return heuristic.getSolution(this);
     }
 
     public void reset(){
         this.possibleSolutions = this.wordList;
+        this.possibleGuesses = this.wordList;
+        this.constraints = new ArrayList<>();
     }
 
     //Filter the list of solutions into possibleSolutions based on the constraints of the guess
@@ -51,8 +56,62 @@ public class Solver {
             }
         }
 
+        HashSet<String> newFilteredGuesses = new HashSet<>();
+        for (String solution : possibleGuesses){
+            if(moderateFilterWord(solution,constraints)){
+                newFilteredGuesses.add(solution);
+            }
+        }
+
         this.constraints.addAll(constraints);
         this.possibleSolutions = newFilteredSolutions;
+        this.possibleGuesses = newFilteredGuesses;
+    }
+
+    //Check that the word satisfies yellow and gray constraints
+    public boolean moderateFilterWord(String word, Collection<Constraint> constraints){
+        //Keep track of the index of characters in the word that have not yet been mapped to by constraints
+        HashSet<Integer> remainingCharIndex = new HashSet<>();
+        for (int charIdx = 0; charIdx < word.length(); charIdx++){
+            remainingCharIndex.add(charIdx);
+        }
+
+        //For each constraint check that the word satisfies it based on the outcome
+        for (Constraint constraint : constraints){
+            Character letter = constraint.getLetter();
+            Outcome outcome = constraint.getOutcome();
+            Integer position = constraint.getPosition();
+
+            switch(outcome){
+                case YELLOW:
+                    if(word.charAt(position) == letter){
+                        return false;
+                    }
+                    int indexOfLetter = -1;
+                    for (int charIdx : remainingCharIndex){
+                        if(word.charAt(charIdx) == letter){
+                            indexOfLetter = charIdx;
+                            break;
+                        }
+                    }
+                    if(indexOfLetter == -1){
+                        return false;
+                    }
+                    else{
+                        remainingCharIndex.remove(indexOfLetter);
+                    }
+                    break;
+                case GRAY:
+                    for (int charIdx : remainingCharIndex){
+                        if(word.charAt(charIdx) == letter){
+                            return false;
+                        }
+                    }
+                    break;
+            }
+
+        }
+        return true;
     }
 
     //Check that the word satisfies all the constraints

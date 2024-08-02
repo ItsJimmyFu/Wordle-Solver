@@ -1,11 +1,7 @@
 package Game;
 
-import Heuristics.FirstFilteredGuess;
-import Heuristics.Heuristic;
-import Heuristics.MostCommonLetters;
-import Heuristics.MostCommonPositionalLetters;
+import Heuristics.*;
 
-import javax.imageio.plugins.tiff.ExifParentTIFFTagSet;
 import java.io.*;
 
 public class Game {
@@ -105,6 +101,10 @@ public class Game {
                     this.heuristic = new MostCommonPositionalLetters();
                     break;
                 }
+                else if (input.equalsIgnoreCase("LC")) {
+                    this.heuristic = new LeastConstraints();
+                    break;
+                }
                 System.out.println("Not valid heuristic");
             }
             solver = new Solver(wordle.loader.getWordList(), heuristic);
@@ -140,7 +140,8 @@ public class Game {
                 wordle.addGuess(userGuess);
                 //Filter out the possible solutions based on the guess
                 solver.filterPossibleSolutions(wordle.guesses.get(wordle.guesses.size()-1));
-                System.out.println(solver.possibleSolutions);
+                System.out.println(solver.possibleSolutions.size() + " : " + solver.possibleSolutions);
+                System.out.println(solver.possibleGuesses.size() + " : " + solver.possibleGuesses);
             } catch (Exception e){
                 System.out.println(e.getMessage());
                 continue;
@@ -209,6 +210,7 @@ public class Game {
             try {
                 //Add the solvers guess to the game
                 wordle.addGuess(solver.makeGuess());
+                System.out.println("Made Guess " + wordle.guesses.get(wordle.guesses.size()-1));
                 //Filter out the possible solutions based on the guess
                 solver.filterPossibleSolutions(wordle.guesses.get(wordle.guesses.size()-1));
             } catch (Exception e){
