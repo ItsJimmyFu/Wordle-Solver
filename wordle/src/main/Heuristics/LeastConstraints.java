@@ -12,8 +12,13 @@ import java.util.HashSet;
 
 public class LeastConstraints extends Heuristic {
     public String getSolution(Solver solver){
+        //For First Guess
 
-        if(solver.constraints == null){
+        if(solver.wordList == solver.possibleGuesses) {
+            return "alter";
+        }
+
+        if(solver.possibleSolutions.size() == 1){
             FirstFilteredGuess ffg = new FirstFilteredGuess();
             return ffg.getSolution(solver);
         }

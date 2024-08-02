@@ -210,7 +210,6 @@ public class Game {
             try {
                 //Add the solvers guess to the game
                 wordle.addGuess(solver.makeGuess());
-                System.out.println("Made Guess " + wordle.guesses.get(wordle.guesses.size()-1));
                 //Filter out the possible solutions based on the guess
                 solver.filterPossibleSolutions(wordle.guesses.get(wordle.guesses.size()-1));
             } catch (Exception e){
