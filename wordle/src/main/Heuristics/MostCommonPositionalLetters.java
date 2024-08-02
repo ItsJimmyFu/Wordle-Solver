@@ -11,19 +11,7 @@ public class MostCommonPositionalLetters extends Heuristic {
     @Override
     public String getSolution(Solver solver) {
         //Making a hashmap of the character its index and its count
-        HashMap<String,Double> frequencyCharList = new HashMap<>();
-        for (String solution : solver.possibleSolutions){
-            for (int charIdx = 0 ; charIdx < solution.length(); charIdx++){
-                char letter = solution.charAt(charIdx);
-                String key = letter + "" + charIdx;
-                if (frequencyCharList.containsKey(key)){
-                    frequencyCharList.put(key,frequencyCharList.get(key)+1);
-                }
-                else{
-                    frequencyCharList.put(key,1.0);
-                }
-            }
-        }
+        HashMap<String,Double> frequencyCharList = getCharFrequency(solver);
 
         String optimalSolution = null;
         double optimalScore = 0;
@@ -42,13 +30,36 @@ public class MostCommonPositionalLetters extends Heuristic {
         return optimalSolution;
     }
 
+    //Gets a frequency of all the characters in specific positions of possible solutions
+    public HashMap<String,Double> getCharFrequency(Solver solver){
+        HashMap<String,Double> frequencyCharList = new HashMap<>();
+        for (String solution : solver.possibleSolutions){
+            for (int charIdx = 0 ; charIdx < solution.length(); charIdx++){
+                char letter = solution.charAt(charIdx);
+                String key = letter + "" + charIdx;
+                if (frequencyCharList.containsKey(key)){
+                    frequencyCharList.put(key,frequencyCharList.get(key)+1);
+                }
+                else{
+                    frequencyCharList.put(key,1.0);
+                }
+            }
+        }
+        //Convert the count into a percentage
+        //for (String letter : frequencyCharList.keySet()){
+        //    frequencyCharList.put(letter,frequencyCharList.get(letter)/solver.possibleSolutions.size());
+        //}
+        return frequencyCharList;
+    }
+
     public double frequencyLettersValue(String solution, HashMap<String,Double> frequencyCharList){
         double score = 0;
         for (int charIdx = 0; charIdx<solution.length(); charIdx++){
             char letter = solution.charAt(charIdx);
             String newKey = letter + "" + charIdx;
-
-            score += frequencyCharList.get(newKey);
+            if(frequencyCharList.containsKey(newKey)) {
+                score += frequencyCharList.get(newKey);
+            }
         }
         return score;
     }

@@ -105,6 +105,10 @@ public class Game {
                     this.heuristic = new LeastConstraints();
                     break;
                 }
+                else if (input.equalsIgnoreCase("MI")) {
+                    this.heuristic = new MostInformation();
+                    break;
+                }
                 System.out.println("Not valid heuristic");
             }
             solver = new Solver(wordle.loader.getWordList(), heuristic);
@@ -140,8 +144,9 @@ public class Game {
                 wordle.addGuess(userGuess);
                 //Filter out the possible solutions based on the guess
                 solver.filterPossibleSolutions(wordle.guesses.get(wordle.guesses.size()-1));
-                System.out.println(solver.possibleSolutions.size() + " : " + solver.possibleSolutions);
-                System.out.println(solver.possibleGuesses.size() + " : " + solver.possibleGuesses);
+                solver.heuristic = new MostCommonPositionalLetters();
+                System.out.println("Best Guess: " + solver.makeGuess());
+                System.out.println(solver.possibleSolutions);
             } catch (Exception e){
                 System.out.println(e.getMessage());
                 continue;

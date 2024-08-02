@@ -8,6 +8,9 @@ import java.util.HashSet;
 
 public class SolverTest {
 
+    //TODO
+    //MAke a test that possibleGuesses is always less than or equal to possibleSolutions
+
     private HashSet<String> wordPoolA = new HashSet<>(Arrays.asList("fever","sever","lever","fleece","telds", "selee", "seeee"));
     private HashSet<String> wordPoolB = new HashSet<>(Arrays.asList(
             "media", "valid", "space", "arena", "funny",

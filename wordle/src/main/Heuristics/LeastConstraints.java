@@ -13,9 +13,9 @@ import java.util.HashSet;
 public class LeastConstraints extends Heuristic {
     public String getSolution(Solver solver){
         //For First Guess
-
         if(solver.wordList == solver.possibleGuesses) {
-            return "alter";
+            MostCommonPositionalLetters mcpl = new MostCommonPositionalLetters();
+            return mcpl.getSolution(solver);
         }
 
         if(solver.possibleSolutions.size() == 1){
@@ -23,9 +23,27 @@ public class LeastConstraints extends Heuristic {
             return ffg.getSolution(solver);
         }
 
-        String optimalSolution = null;
-        int optimalScore = 0;
+        HashMap<Outcome,HashMap<Character, ArrayList<Integer>>> constraintMapping = getConstraintMapping(solver);
 
+        String optimalSolution = null;
+        int optimalScore = -10000;
+
+        for (String solution : solver.wordList){
+            int score = informationValue(solution,constraintMapping);
+            if(score > optimalScore){
+                optimalScore = score;
+                optimalSolution = solution;
+            }
+        }
+        if(optimalSolution == null){
+            FirstFilteredGuess ffg = new FirstFilteredGuess();
+            return ffg.getSolution(solver);
+        }
+        return optimalSolution;
+    }
+
+    public HashMap<Outcome,HashMap<Character, ArrayList<Integer>>> getConstraintMapping(Solver solver){
+        HashMap<Outcome,HashMap<Character, ArrayList<Integer>>> constraintMapping = new HashMap<>();
         HashMap<Character, ArrayList<Integer>> greenMaps = new HashMap<>();
         HashMap<Character, ArrayList<Integer>> yellowMaps = new HashMap<>();
         HashMap<Character, ArrayList<Integer>> grayMaps = new HashMap<>();
@@ -53,36 +71,32 @@ public class LeastConstraints extends Heuristic {
             }
         }
 
-        for (String solution : solver.wordList){
-            int score = informationValue(solution,greenMaps,yellowMaps,grayMaps);
-            if(score > optimalScore){
-                optimalScore = score;
-                optimalSolution = solution;
-            }
-        }
-        if(optimalSolution == null){
-            FirstFilteredGuess ffg = new FirstFilteredGuess();
-            return ffg.getSolution(solver);
-        }
-        return optimalSolution;
+        constraintMapping.put(Outcome.GREEN,greenMaps);
+        constraintMapping.put(Outcome.YELLOW,yellowMaps);
+        constraintMapping.put(Outcome.GRAY,grayMaps);
+        return constraintMapping;
     }
 
-    public int informationValue(String solution, HashMap<Character, ArrayList<Integer>> greenMaps,HashMap<Character, ArrayList<Integer>> yellowMaps,HashMap<Character, ArrayList<Integer>> grayMaps){
+    public int informationValue(String solution, HashMap<Outcome,HashMap<Character, ArrayList<Integer>>> constraintMapping){
         int score = 0;
         for (int idx = 0; idx < solution.toCharArray().length; idx++) {
             char letter = solution.charAt(idx);
-            if(greenMaps.containsKey(letter)){
-                score -= 2;
+            if(solution.substring(0,idx).contains(letter +"")){
+                continue;
             }
-            else if (yellowMaps.containsKey(letter)){
-                if(yellowMaps.get(letter).contains(idx)){
+
+            if(constraintMapping.get(Outcome.GREEN).containsKey(letter)){
+                score -= 5;
+            }
+            else if (constraintMapping.get(Outcome.YELLOW).containsKey(letter)){
+                if(constraintMapping.get(Outcome.YELLOW).get(letter).contains(idx)){
                     score -=1;
                 }
                 else {
                     score += 1;
                 }
             }
-            else if (grayMaps.containsKey(letter)){
+            else if (constraintMapping.get(Outcome.GRAY).containsKey(letter)){
                 score -= 3;
             }
             else {

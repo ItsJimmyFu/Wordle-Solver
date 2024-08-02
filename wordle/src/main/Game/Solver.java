@@ -83,6 +83,11 @@ public class Solver {
             Integer position = constraint.getPosition();
 
             switch(outcome){
+                case GREEN:
+                    if((word.charAt(position) == letter) && (remainingCharIndex.contains(position))){
+                        remainingCharIndex.remove(position);
+                    }
+                    break;
                 case YELLOW:
                     if(word.charAt(position) == letter){
                         return false;
