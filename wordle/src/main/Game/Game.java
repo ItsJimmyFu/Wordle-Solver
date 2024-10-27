@@ -86,7 +86,7 @@ public class Game {
             }
         }
         if (setting == Setting.SOLVER || setting == Setting.EXPERIMENT) {
-            System.out.println("Please Input Heuristic");
+            System.out.println("Please Input Heuristic (FFG | MCL | MCPL | LC | C)");
             while(true) {
                 String input = readLine();
                 if (input.equalsIgnoreCase("FFG")) {
@@ -103,6 +103,10 @@ public class Game {
                 }
                 else if (input.equalsIgnoreCase("LC")) {
                     this.heuristic = new LeastConstraints();
+                    break;
+                }
+                else if (input.equalsIgnoreCase("C")) {
+                    this.heuristic = new LeastConstraintsAndMostCommonPositionalLetters();
                     break;
                 }
                 else if (input.equalsIgnoreCase("MI")) {
@@ -145,7 +149,6 @@ public class Game {
                 //Filter out the possible solutions based on the guess
                 solver.filterPossibleSolutions(wordle.guesses.get(wordle.guesses.size()-1));
                 solver.heuristic = new MostCommonPositionalLetters();
-                System.out.println("Best Guess: " + solver.makeGuess());
                 System.out.println(solver.possibleSolutions);
             } catch (Exception e){
                 System.out.println(e.getMessage());

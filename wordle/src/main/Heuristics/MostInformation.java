@@ -1,57 +1,59 @@
 package Heuristics;
 
-import Game.Outcome;
-import Game.Solver;
+import Game.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.sql.Array;
+import java.util.*;
 
 public class MostInformation extends Heuristic{
-    //Combining MCPL and LC
     @Override
     public String getSolution(Solver solver) {
-        LeastConstraints lc = new LeastConstraints();
-        MostCommonPositionalLetters mcpl = new MostCommonPositionalLetters();
-
         //For First Guess
         if(solver.wordList == solver.possibleGuesses) {
-            return mcpl.getSolution(solver);
+            return "tares";
         }
-
-        if(solver.possibleSolutions.size() == 1){
+        if(solver.possibleSolutions.size()==1){
             FirstFilteredGuess ffg = new FirstFilteredGuess();
             return ffg.getSolution(solver);
         }
 
-        HashMap<Outcome, HashMap<Character, ArrayList<Integer>>> conMap = lc.getConstraintMapping(solver);
-        HashMap<String,Double> charFreq = mcpl.getCharFrequency(solver);
+        float maxEntropy = 0;
+        String bestGuess = "";
 
-        String optimalSolution = null;
-        float optimalScore = -100000000;
-        float optimalA = 0;
-        float optimalB = 0;
+        for (String potentialWord: solver.possibleGuesses) {
+            float val = 0;
+            HashMap<ArrayList<Outcome>,Integer> searched = new HashMap();
+            for (String solution : solver.possibleSolutions) {
+                Guess guess = new Guess(potentialWord, solution);
+                if (searched.keySet().contains(guess.getOutcomes())) {
+                    searched.put(guess.getOutcomes(),searched.get(guess.getOutcomes())+1);
+                }
+                else{
+                    searched.put(guess.getOutcomes(),1);
+                }
+            }
 
-        for (String solution : solver.possibleGuesses){
-            float b = lc.informationValue(solution,conMap)*10;
-            float a = (float) mcpl.frequencyLettersValue(solution,charFreq);
-            float score = a+b;
-            if(score > optimalScore){
-                optimalScore = score;
-                optimalSolution = solution;
-                optimalA = a;
-                optimalB = b;
+            for (ArrayList<Outcome> pattern : searched.keySet()){
+                float occur = searched.get(pattern);
+                float prob = occur/solver.possibleGuesses.size();
+                val += prob * (int)(Math.log(1/prob) / Math.log(2));
+            }
+            if( val > maxEntropy){
+                maxEntropy = val;
+                bestGuess = potentialWord;
             }
         }
-        if(optimalSolution == null){
-            FirstFilteredGuess ffg = new FirstFilteredGuess();
-            return ffg.getSolution(solver);
-        }
-        return optimalSolution;
+        return bestGuess;
+    }
+
+    public HashSet<ArrayList<Outcome>> getPotentialOutcomes(String solution, Solver solver){
+        ArrayList<Outcome> outcomeVal = new ArrayList<>();
+
+        return null;
     }
 
     @Override
     public String getName() {
         return "MostInformation";
     }
-
 }
