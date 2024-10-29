@@ -26,7 +26,8 @@ public class Loader {
                 filePath = "src/resources/WordList/4-letter-words.txt";
                 break;
             case 5:
-                filePath = "src/resources/WordList/5-letter-words.txt";
+                //filePath = "src/resources/WordList/5-letter-words.txt";
+                filePath = "src/resources/WordList/wordle-list.txt";
                 break;
             default:
                 throw new Exception("Not Valid Word Length");

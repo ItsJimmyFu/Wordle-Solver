@@ -86,7 +86,7 @@ public class Game {
             }
         }
         if (setting == Setting.SOLVER || setting == Setting.EXPERIMENT) {
-            System.out.println("Please Input Heuristic (FFG | MCL | MCPL | LC | C)");
+            System.out.println("Please Input Heuristic (FFG | MCL | MCPL | LC | C | MI)");
             while(true) {
                 String input = readLine();
                 if (input.equalsIgnoreCase("FFG")) {
@@ -159,7 +159,7 @@ public class Game {
     }
 
     public void startExperiment(){
-        String filePath = "src/resources/Results/" + heuristic.getName() + wordle.wordLength + ".txt";
+        String filePath = "src/resources/Results/official" + heuristic.getName() + wordle.wordLength + ".txt";
 
         FileWriter file;
         try {

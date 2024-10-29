@@ -10,7 +10,7 @@ public class MostInformation extends Heuristic{
     public String getSolution(Solver solver) {
         //For First Guess
         if(solver.wordList == solver.possibleGuesses) {
-            return "tares";
+            return "crate";
         }
         if(solver.possibleSolutions.size()==1){
             FirstFilteredGuess ffg = new FirstFilteredGuess();

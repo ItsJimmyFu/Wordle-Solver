@@ -39,7 +39,7 @@ public class Wordle {
     public void addGuess(String word) throws Exception{
         //Ensure that the word is valid
         if(word.length()!= wordLength || !loader.getWordList().contains(word.toLowerCase())){
-            throw new Exception("Invalid Game.Guess");
+            throw new Exception("Invalid Guess");
         }
 
         //Create the guess
