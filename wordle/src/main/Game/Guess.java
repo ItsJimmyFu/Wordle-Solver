@@ -21,6 +21,13 @@ public class Guess {
         createOutcomes();
     }
 
+    public Guess(String guess, ArrayList<Outcome> outcomes){
+        this.guess = guess;
+        this.outcomes = outcomes;
+        this.solution = "";
+        this.wordLength = 5;
+    }
+
     public ArrayList<Outcome> getOutcomes() {
         return outcomes;
     }
@@ -65,6 +72,16 @@ public class Guess {
             }
         }
         this.outcomes = new ArrayList<>(Arrays.asList(outcomes));
+    }
+
+    //Check if the guess is the correct guess
+    public Boolean isCorrect(){
+        for (Outcome outcome : outcomes){
+            if(outcome != Outcome.GREEN){
+                return false;
+            }
+        }
+        return true;
     }
 
     //Get the string encoding of the guess

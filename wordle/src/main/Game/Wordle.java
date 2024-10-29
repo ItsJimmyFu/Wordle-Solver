@@ -30,6 +30,11 @@ public class Wordle {
         guesses = new ArrayList<>();
     }
 
+    //Get the most recent guess in the game
+    public Guess getRecentGuess(){
+        return guesses.get(guesses.size()-1);
+    }
+
     //Add a guess to the wordle game
     public void addGuess(String word) throws Exception{
         //Ensure that the word is valid

@@ -147,7 +147,7 @@ public class Game {
             try {
                 wordle.addGuess(userGuess);
                 //Filter out the possible solutions based on the guess
-                solver.filterPossibleSolutions(wordle.guesses.get(wordle.guesses.size()-1));
+                solver.filterPossibleSolutions(wordle.getRecentGuess());
                 solver.heuristic = new MostCommonPositionalLetters();
                 System.out.println(solver.possibleSolutions);
             } catch (Exception e){
@@ -219,7 +219,7 @@ public class Game {
                 //Add the solvers guess to the game
                 wordle.addGuess(solver.makeGuess());
                 //Filter out the possible solutions based on the guess
-                solver.filterPossibleSolutions(wordle.guesses.get(wordle.guesses.size()-1));
+                solver.filterPossibleSolutions(wordle.getRecentGuess());
             } catch (Exception e){
                 System.out.println(e.getMessage());
                 continue;
