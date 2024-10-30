@@ -1,11 +1,8 @@
 package Heuristics;
 
-import Game.Constraint;
 import Game.Solver;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class MostCommonPositionalLetters extends Heuristic {
     @Override
@@ -45,10 +42,6 @@ public class MostCommonPositionalLetters extends Heuristic {
                 }
             }
         }
-        //Convert the count into a percentage
-        //for (String letter : frequencyCharList.keySet()){
-        //    frequencyCharList.put(letter,frequencyCharList.get(letter)/solver.possibleSolutions.size());
-        //}
         return frequencyCharList;
     }
 

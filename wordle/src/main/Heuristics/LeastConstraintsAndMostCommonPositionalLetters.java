@@ -14,7 +14,7 @@ public class LeastConstraintsAndMostCommonPositionalLetters extends Heuristic{
         MostCommonPositionalLetters mcpl = new MostCommonPositionalLetters();
 
         //For First Guess
-        if(solver.wordList == solver.possibleGuesses) {
+        if(solver.solutionWordList == solver.possibleSolutions) {
             return mcpl.getSolution(solver);
         }
 
@@ -29,7 +29,7 @@ public class LeastConstraintsAndMostCommonPositionalLetters extends Heuristic{
         String optimalSolution = null;
         float optimalScore = -100000000;
 
-        for (String solution : solver.possibleGuesses){
+        for (String solution : solver.possibleSolutions){
             float b = lc.informationValue(solution,conMap)*10;
             float a = (float) mcpl.frequencyLettersValue(solution,charFreq);
             float score = a+b;

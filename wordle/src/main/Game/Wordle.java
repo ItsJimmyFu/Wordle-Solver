@@ -15,12 +15,8 @@ public class Wordle {
     public Wordle(int wordLength) throws Exception{
         this.wordLength = wordLength;
         this.guesses = new ArrayList<>();
-        try {
-            loader = new Loader(wordLength);
-        } catch (Exception e) {
-            throw e;
-        }
-        solver = new Solver(loader.getWordList());
+        loader = new Loader(wordLength);
+        solver = new Solver(loader.getWordList(), loader.getSolutionWordList());
     }
 
     //Reset the wordle game
@@ -61,9 +57,9 @@ public class Wordle {
         //Choose a random index in wordList
         Random random = new Random();
         //Get a random value from the set
-        int randomNum = random.nextInt(loader.getWordList().size());
+        int randomNum = random.nextInt(loader.getSolutionWordList().size());
         int curIdx = 0;
-        for (String word: loader.getWordList()){
+        for (String word: loader.getSolutionWordList()){
             if(curIdx == randomNum){
                 solution = word;
             }

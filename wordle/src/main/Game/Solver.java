@@ -6,21 +6,24 @@ import java.util.*;
 
 public class Solver {
     public HashSet<String> wordList;
+    public HashSet<String> solutionWordList;
     public HashSet<String> possibleSolutions;
     public HashSet<String> possibleGuesses;
     public Heuristic heuristic;
     public ArrayList<Constraint> constraints;
 
-    public Solver(HashSet<String> wordList){
-        this.possibleSolutions = wordList;
+    public Solver(HashSet<String> wordList, HashSet<String> solutionWordList){
+        this.possibleSolutions = solutionWordList;
         this.wordList = wordList;
+        this.solutionWordList = solutionWordList;
         this.possibleGuesses = wordList;
         this.constraints = new ArrayList<>();
     }
 
-    public Solver(HashSet<String> wordList, Heuristic heuristic){
-        this.possibleSolutions = wordList;
+    public Solver(HashSet<String> wordList, HashSet<String> solutionWordList, Heuristic heuristic){
+        this.possibleSolutions = solutionWordList;
         this.wordList = wordList;
+        this.solutionWordList = solutionWordList;
         this.constraints = new ArrayList<>();
         this.possibleGuesses = wordList;
         this.heuristic = heuristic;
@@ -31,7 +34,7 @@ public class Solver {
     }
 
     public void reset(){
-        this.possibleSolutions = this.wordList;
+        this.possibleSolutions = this.solutionWordList;
         this.possibleGuesses = this.wordList;
         this.constraints = new ArrayList<>();
     }
@@ -43,9 +46,8 @@ public class Solver {
         TreeSet<Constraint> constraints = new TreeSet<>();
         for (int charIdx=0; charIdx<guess.wordLength; charIdx++){
             char letter = guess.getGuess().charAt(charIdx);
-            int position = charIdx;
             Outcome outcome = guess.getOutcomes().get(charIdx);
-            constraints.add(new Constraint(letter, position, outcome));
+            constraints.add(new Constraint(letter, charIdx, outcome));
         }
 
         //Creates the new filtered list of solutions and adds each word in the word list that satisfies the constraints
@@ -78,13 +80,13 @@ public class Solver {
 
         //For each constraint check that the word satisfies it based on the outcome
         for (Constraint constraint : constraints){
-            Character letter = constraint.getLetter();
+            char letter = constraint.getLetter();
             Outcome outcome = constraint.getOutcome();
             Integer position = constraint.getPosition();
 
             switch(outcome){
                 case GREEN:
-                    if((word.charAt(position) == letter) && (remainingCharIndex.contains(position))){
+                    if((word.charAt(position) == letter)){
                         remainingCharIndex.remove(position);
                     }
                     break;
@@ -129,7 +131,7 @@ public class Solver {
 
         //For each constraint check that the word satisfies it based on the outcome
         for (Constraint constraint : constraints){
-            Character letter = constraint.getLetter();
+            char letter = constraint.getLetter();
             Outcome outcome = constraint.getOutcome();
             Integer position = constraint.getPosition();
 

@@ -1,10 +1,6 @@
 package Heuristics;
 
-import Game.Constraint;
 import Game.Solver;
-
-import java.util.ArrayList;
-import java.util.HashSet;
 
 public class FirstFilteredGuess extends Heuristic {
 

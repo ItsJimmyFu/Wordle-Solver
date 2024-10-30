@@ -4,16 +4,13 @@ import Game.Constraint;
 import Game.Outcome;
 import Game.Solver;
 
-import javax.swing.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class LeastConstraints extends Heuristic {
     public String getSolution(Solver solver){
         //For First Guess
-        if(solver.wordList == solver.possibleGuesses) {
+        if(solver.solutionWordList == solver.possibleSolutions) {
             MostCommonPositionalLetters mcpl = new MostCommonPositionalLetters();
             return mcpl.getSolution(solver);
         }
@@ -28,7 +25,7 @@ public class LeastConstraints extends Heuristic {
         String optimalSolution = null;
         int optimalScore = -10000;
 
-        for (String solution : solver.wordList){
+        for (String solution : solver.solutionWordList){
             int score = informationValue(solution,constraintMapping);
             if(score > optimalScore){
                 optimalScore = score;

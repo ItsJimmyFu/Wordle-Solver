@@ -2,34 +2,28 @@ import Game.Guess;
 import Game.Outcome;
 import Game.Solver;
 import Game.Wordle;
-import Heuristics.Heuristic;
 import Heuristics.MostInformation;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.security.spec.ECField;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.function.Supplier;
 
 public class WordleBrowserSolver {
     WebDriver driver;
     Wordle wordle;
 
-    public void initialize(){
+    public void initialize() throws InterruptedException {
         //Initialize wordle
         try {
             wordle = new Wordle(5);
-            wordle.solver = new Solver(wordle.loader.getWordList(), new MostInformation());
+            wordle.solver = new Solver(wordle.loader.getWordList(), wordle.loader.getSolutionWordList(), new MostInformation());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -39,6 +33,8 @@ public class WordleBrowserSolver {
 
         // Navigate to wordle website
         driver.get("https://www.nytimes.com/games/wordle/index.html");
+
+        Thread.sleep(2000);
 
         //Starting by pressing the Play Button
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -82,13 +78,10 @@ public class WordleBrowserSolver {
             List<WebElement> columnElements = rowElement.findElements(By.className("Tile-module_tile__UWEHN"));
             String outcomeValue = columnElements.get(columnElements.size()-1).getAttribute("data-state");
             //Check if a guess has been made yet
-            if("absent".equals(outcomeValue) || "present".equals(outcomeValue) || "correct".equals(outcomeValue)){
-                    return true;
-            }
-            return false;
+            return "absent".equals(outcomeValue) || "present".equals(outcomeValue) || "correct".equals(outcomeValue);
         });
 
-        String guessString = "";
+        StringBuilder guessString = new StringBuilder();
         ArrayList<Outcome> outcomes = new ArrayList<>();
 
         //Read the final result
@@ -96,24 +89,17 @@ public class WordleBrowserSolver {
         for (WebElement child : children) {
             // Split the string by to get the text and outcome component
             String[] label = child.getAttribute("aria-label").split(", ");
-            guessString += label[1].toLowerCase();
-            switch (label[2]){
-                case "absent":
-                    outcomes.add(Outcome.GRAY);
-                    break;
-                case "present in another position":
-                    outcomes.add(Outcome.YELLOW);
-                    break;
-                case "correct":
-                    outcomes.add(Outcome.GREEN);
-                    break;
-                default:
-                    System.out.println("Invalid: " +label[2]);
+            guessString.append(label[1].toLowerCase());
+            switch (label[2]) {
+                case "absent" -> outcomes.add(Outcome.GRAY);
+                case "present in another position" -> outcomes.add(Outcome.YELLOW);
+                case "correct" -> outcomes.add(Outcome.GREEN);
+                default -> System.out.println("Invalid: " + label[2]);
             }
         }
 
         //Add the guess to the wordle class
-        Guess guess = new Guess(guessString,outcomes);
+        Guess guess = new Guess(guessString.toString(),outcomes);
         wordle.guesses.add(guess);
 
         //Filter out the possible solutions based on the recent guess
@@ -124,7 +110,7 @@ public class WordleBrowserSolver {
         WordleBrowserSolver wordleBrowserSolver = new WordleBrowserSolver();
         wordleBrowserSolver.initialize();
 
-        Boolean correct = false;
+        boolean correct = false;
 
         for (int i = 1; i <= 6; i++) {
             //Send the guess string to wordle browser

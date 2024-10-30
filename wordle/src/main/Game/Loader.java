@@ -3,42 +3,44 @@ package Game;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Loader {
-    private int wordLength;
     public HashSet<String> wordList;
+    public HashSet<String> solutionWordList;
 
     public Loader(int wordLength) throws Exception{
-        this.wordLength = wordLength;
-        String filePath;
+        String solutionWordListFilePath;
+        String allWordListFilePath;
 
         //Check the desired word length is within word range and load the words from the corresponding file path
-        switch (this.wordLength) {
-            case 2:
-                filePath = "src/resources/WordList/2-letter-words.txt";
-                break;
-            case 3:
-                filePath = "src/resources/WordList/3-letter-words.txt";
-                break;
-            case 4:
-                filePath = "src/resources/WordList/4-letter-words.txt";
-                break;
-            case 5:
-                //filePath = "src/resources/WordList/5-letter-words.txt";
-                filePath = "src/resources/WordList/wordle-list.txt";
-                break;
-            default:
-                throw new Exception("Not Valid Word Length");
+        switch (wordLength) {
+            case 2 -> {
+                solutionWordListFilePath = "src/resources/WordList/2-letter-words.txt";
+                allWordListFilePath = "";
+            }
+            case 3 -> {
+                solutionWordListFilePath = "src/resources/WordList/3-letter-words.txt";
+                allWordListFilePath = "";
+            }
+            case 4 -> {
+                solutionWordListFilePath = "src/resources/WordList/4-letter-words.txt";
+                allWordListFilePath = "";
+            }
+            case 5 -> {
+                allWordListFilePath = "src/resources/WordList/5-letter-words.txt";
+                solutionWordListFilePath = "src/resources/WordList/wordle-list.txt";
+            }
+            default -> throw new Exception("Not Valid Word Length");
         }
 
-        generateWords(filePath);
+        this.wordList = generateWords(allWordListFilePath);
+        this.solutionWordList = generateWords(solutionWordListFilePath);
     }
 
     // Read the text file and load the words into wordList
-    private void generateWords(String filePath){
-        wordList = new HashSet<>();
+    private HashSet<String> generateWords(String filePath){
+        HashSet<String> wordList = new HashSet<>();
 
         BufferedReader reader;
         try {
@@ -54,10 +56,16 @@ public class Loader {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return wordList;
     }
 
-    //Get the list of words
+    //Get the list of possible words
     public HashSet<String> getWordList() {
         return wordList;
+    }
+
+    //Get the list of possible solution words
+    public HashSet<String> getSolutionWordList() {
+        return solutionWordList;
     }
 }

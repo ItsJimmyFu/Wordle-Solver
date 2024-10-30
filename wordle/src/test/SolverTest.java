@@ -28,7 +28,7 @@ public class SolverTest {
 
     @Test
     void testFilterGrayLetterWords(){
-        Solver solver = new Solver(wordPoolB);
+        Solver solver = new Solver(wordPoolB, wordPoolB);
         solver.filterPossibleSolutions(new Guess("shown", "alike"));
         HashSet<String> expected = new HashSet<>(Arrays.asList(
                 "media", "valid", "drive", "peter", "upper", "alike"));
@@ -42,7 +42,7 @@ public class SolverTest {
 
     @Test
     void testFilterYellowLetterWords(){
-        Solver solver = new Solver(wordPoolB);
+        Solver solver = new Solver(wordPoolB, wordPoolB);
         solver.filterPossibleSolutions(new Guess("bravo", "joint"));
         HashSet<String> expected = new HashSet<>(Arrays.asList("wound", "joint", "house"));
 
@@ -61,7 +61,7 @@ public class SolverTest {
 
     @Test
     void testFilterGreenLetterWords(){
-        Solver solver = new Solver(wordPoolB);
+        Solver solver = new Solver(wordPoolB, wordPoolB);
         solver.filterPossibleSolutions(new Guess("abuds", "arena"));
         HashSet<String> expected = new HashSet<>(Arrays.asList(
                "arena", "alike", "amigo"));
@@ -76,7 +76,7 @@ public class SolverTest {
     @Test
     void testFilterRandomWords(){
         //Solution = daily
-        Solver solver = new Solver(wordPoolC);
+        Solver solver = new Solver(wordPoolC, wordPoolC);
         solver.filterPossibleSolutions(new Guess("phase", "daily"));
         HashSet<String> expected = new HashSet<>(Arrays.asList(
                 "album", "major", "daily", "about", "ratio", "mayor", "trial"
@@ -94,14 +94,14 @@ public class SolverTest {
         Assertions.assertEquals(expected, solver.possibleSolutions);
 
         //Solution = speed
-        solver = new Solver(wordPoolC);
+        solver = new Solver(wordPoolC, wordPoolC);
         solver.filterPossibleSolutions(new Guess("under", "speed"));
         expected = new HashSet<>(Arrays.asList(
                 "speed"
         ));
 
         //Solution = sixty
-        solver = new Solver(wordPoolC);
+        solver = new Solver(wordPoolC, wordPoolC);
         solver.filterPossibleSolutions(new Guess("check", "sixty"));
         expected = new HashSet<>(Arrays.asList(
                 "wound", "album", "major", "grand", "daily", "solid", "about", "ratio", "mayor", "sixty", "strip", "trial"
@@ -119,7 +119,7 @@ public class SolverTest {
         Assertions.assertEquals(expected, solver.possibleSolutions);
 
         //Solution = ratio
-        solver = new Solver(wordPoolC);
+        solver = new Solver(wordPoolC, wordPoolC);
         solver.filterPossibleSolutions(new Guess("horse", "ratio"));
         expected = new HashSet<>(Arrays.asList("major", "ratio", "mayor"));
         Assertions.assertEquals(expected, solver.possibleSolutions);
@@ -135,7 +135,7 @@ public class SolverTest {
 
     @Test
     void testFilterDuplicateLetterWords(){
-        Solver solver = new Solver(wordPoolA);
+        Solver solver = new Solver(wordPoolA, wordPoolA);
 
         //Testing filter for words with unlimited letter occurences
         solver.filterPossibleSolutions(new Guess("eexxx", "zezez"));

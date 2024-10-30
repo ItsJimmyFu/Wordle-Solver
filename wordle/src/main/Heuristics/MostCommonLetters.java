@@ -1,11 +1,8 @@
 package Heuristics;
 
-import Game.Constraint;
 import Game.Solver;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class MostCommonLetters extends Heuristic {
     public String getSolution(Solver solver) {
@@ -22,9 +19,7 @@ public class MostCommonLetters extends Heuristic {
             }
         }
         //Convert the count into a percentage
-        for (Character letter : frequencyCharList.keySet()){
-            frequencyCharList.put(letter,frequencyCharList.get(letter)/solver.possibleSolutions.size());
-        }
+        frequencyCharList.replaceAll((l, v) -> frequencyCharList.get(l) / solver.possibleSolutions.size());
         String optimalSolution = null;
         double optimalScore = 0;
 

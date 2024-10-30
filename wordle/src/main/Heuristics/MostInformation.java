@@ -2,15 +2,14 @@ package Heuristics;
 
 import Game.*;
 
-import java.sql.Array;
 import java.util.*;
 
 public class MostInformation extends Heuristic{
     @Override
     public String getSolution(Solver solver) {
         //For First Guess
-        if(solver.wordList == solver.possibleGuesses) {
-            return "crate";
+        if(solver.solutionWordList == solver.possibleSolutions) {
+            return "tarse";
         }
         if(solver.possibleSolutions.size()==1){
             FirstFilteredGuess ffg = new FirstFilteredGuess();
@@ -44,12 +43,6 @@ public class MostInformation extends Heuristic{
             }
         }
         return bestGuess;
-    }
-
-    public HashSet<ArrayList<Outcome>> getPotentialOutcomes(String solution, Solver solver){
-        ArrayList<Outcome> outcomeVal = new ArrayList<>();
-
-        return null;
     }
 
     @Override

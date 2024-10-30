@@ -5,8 +5,8 @@ import java.util.Arrays;
 
 public class Guess {
     public int wordLength;
-    private String guess;
-    private String solution;
+    private final String guess;
+    private final String solution;
     private ArrayList<Outcome> outcomes;
 
     //Constants for colour encoding in terminal output
@@ -57,10 +57,7 @@ public class Guess {
         // Add the Yellow and Gray Matches
         for(int charIndex = 0; charIndex < wordLength; charIndex++) {
             //Skip if the guess at charIndex is already matched to a solution char
-            if(outcomes[charIndex] == Outcome.GREEN){
-                continue;
-            }
-            else{
+            if(outcomes[charIndex] != Outcome.GREEN){
                 //Check if guess at charIndex can be mapped to the remaining solution characters
                 if(remainingChars.contains(guess.charAt(charIndex))){
                     outcomes[charIndex] = Outcome.YELLOW;
@@ -87,20 +84,14 @@ public class Guess {
     //Get the string encoding of the guess
     @Override
     public String toString(){
-        String string = " ";
+        StringBuilder string = new StringBuilder(" ");
         for (int charIndex = 0; charIndex < wordLength; charIndex++){
-            switch (outcomes.get(charIndex)){
-                case GREEN:
-                    string += GREEN_BACKGROUND + " " + Character.toUpperCase(guess.charAt(charIndex)) + " " + RESET;
-                    break;
-                case YELLOW:
-                    string += YELLOW_BACKGROUND + " " + Character.toUpperCase(guess.charAt(charIndex)) + " " + RESET;
-                    break;
-                case GRAY:
-                    string += " " + Character.toUpperCase(guess.charAt(charIndex)) + " ";
-                    break;
+            switch (outcomes.get(charIndex)) {
+                case GREEN -> string.append(GREEN_BACKGROUND + " ").append(Character.toUpperCase(guess.charAt(charIndex))).append(" ").append(RESET);
+                case YELLOW -> string.append(YELLOW_BACKGROUND + " ").append(Character.toUpperCase(guess.charAt(charIndex))).append(" ").append(RESET);
+                case GRAY -> string.append(" ").append(Character.toUpperCase(guess.charAt(charIndex))).append(" ");
             }
         }
-        return string;
+        return string.toString();
     }
 }

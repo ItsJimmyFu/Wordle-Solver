@@ -5,7 +5,6 @@ import Heuristics.*;
 import java.io.*;
 
 public class Game {
-    private BufferedWriter writer;
     public BufferedReader reader;
     public Wordle wordle;
     public Solver solver;
@@ -115,10 +114,10 @@ public class Game {
                 }
                 System.out.println("Not valid heuristic");
             }
-            solver = new Solver(wordle.loader.getWordList(), heuristic);
+            solver = new Solver(wordle.loader.getWordList(), wordle.loader.getSolutionWordList(), heuristic);
         }
         else {
-            solver = new Solver(wordle.loader.getWordList());
+            solver = new Solver(wordle.loader.getWordList(), wordle.loader.getSolutionWordList());
         }
     }
 
@@ -168,7 +167,7 @@ public class Game {
             System.out.println(exception.getMessage());
             return;
         }
-        writer = new BufferedWriter(file);
+        BufferedWriter writer = new BufferedWriter(file);
 
         int totalGuesses = 0;
         int wins = 0;
@@ -213,7 +212,6 @@ public class Game {
 
     //Start the game but with info about next possible move
     public void playWithSolver(){
-
         while(!wordle.gameOver){
             try {
                 //Add the solvers guess to the game
@@ -222,7 +220,7 @@ public class Game {
                 solver.filterPossibleSolutions(wordle.getRecentGuess());
             } catch (Exception e){
                 System.out.println(e.getMessage());
-                continue;
+                return;
             }
         }
     }

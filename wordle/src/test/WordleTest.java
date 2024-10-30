@@ -109,13 +109,13 @@ public class WordleTest {
     @Test
     void testSolutionGenerate() throws Exception{
         Loader loader = new Loader(5);
-        loader.wordList = new HashSet<>();
-        loader.wordList.add("SOL.1");
+        loader.solutionWordList = new HashSet<>();
+        loader.solutionWordList.add("SOLUTION");
 
         Wordle wordle = new Wordle(5);
         wordle.loader = loader;
         wordle.generateSolution();
-        Assertions.assertEquals("SOL.1",wordle.solution);
+        Assertions.assertEquals("SOLUTION",wordle.solution);
 
     }
 }
